@@ -35,13 +35,13 @@ async function run() {
     const db = client.db("Al_Amin_Shop");
 
     // Collections
-    const ShopCollection = db.collection("Products");
+    const ShopCollection = db.collection("products");
     const OrderCollection = db.collection("Orders");
 
     // =========================
     // Add Product API
     // =========================
-    app.post("/Products", async (req, res) => {
+    app.post("/products", async (req, res) => {
       try {
         const NewProduct = req.body;
 
@@ -59,29 +59,29 @@ async function run() {
     });
     // UPDATE PRODUCT
     app.put("/products/:id", async (req, res) => {
-  try {
-    const id = req.params.id;
+      try {
+        const id = req.params.id;
 
-    const filter = { _id: new ObjectId(id) };
+        const filter = { _id: new ObjectId(id) };
 
-    const updateDoc = {
-      $set: req.body,
-    };
+        const updateDoc = {
+          $set: req.body,
+        };
 
-    const result = await ShopCollection.updateOne(filter, updateDoc);
+        const result = await ShopCollection.updateOne(filter, updateDoc);
 
-    res.send({
-      success: true,
-      message: "Product updated successfully",
-      result,
+        res.send({
+          success: true,
+          message: "Product updated successfully",
+          result,
+        });
+      } catch (error) {
+        res.status(500).send({
+          success: false,
+          message: error.message,
+        });
+      }
     });
-  } catch (error) {
-    res.status(500).send({
-      success: false,
-      message: error.message,
-    });
-  }
-});
 
     // =========================
     // Add Order API
