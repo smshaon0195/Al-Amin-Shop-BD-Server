@@ -57,6 +57,31 @@ async function run() {
         });
       }
     });
+    // UPDATE PRODUCT
+    app.put("/products/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const filter = { _id: new ObjectId(id) };
+
+    const updateDoc = {
+      $set: req.body,
+    };
+
+    const result = await ShopCollection.updateOne(filter, updateDoc);
+
+    res.send({
+      success: true,
+      message: "Product updated successfully",
+      result,
+    });
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      message: error.message,
+    });
+  }
+});
 
     // =========================
     // Add Order API
@@ -184,6 +209,35 @@ async function run() {
         });
       }
     });
+
+    // DELETE PRODUCT
+    app.delete("/products/:id", async (req, res) => {
+      try {
+        const id = req.params.id;
+
+        const result = await ShopCollection.deleteOne({
+          _id: new ObjectId(id),
+        });
+
+        if (result.deletedCount === 0) {
+          return res.status(404).send({
+            success: false,
+            message: "Product not found",
+          });
+        }
+
+        res.send({
+          success: true,
+          message: "Product deleted successfully",
+        });
+      } catch (error) {
+        res.status(500).send({
+          success: false,
+          message: error.message,
+        });
+      }
+    });
+
     // MongoDB Ping
     await client.db("admin").command({ ping: 1 });
 
